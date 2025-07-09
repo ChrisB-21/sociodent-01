@@ -203,19 +203,22 @@
         }
 
         function openLogin() {
-            window.open('http://localhost:8082/auth?mode=login', '_blank');
+            const FRONTEND_HOST = window.FRONTEND_HOST || 'localhost';
+            window.open(`http://${FRONTEND_HOST}:8082/auth?mode=login`, '_blank');
             document.getElementById('navigation-result').innerHTML = 
                 '<div class="success">✅ Opened login page in new tab</div>';
         }
 
         function openMyAppointments() {
-            window.open('http://localhost:8082/my-appointments', '_blank');
+            const FRONTEND_HOST = window.FRONTEND_HOST || 'localhost';
+            window.open(`http://${FRONTEND_HOST}:8082/my-appointments`, '_blank');
             document.getElementById('navigation-result').innerHTML = 
                 '<div class="success">✅ Opened My Appointments page in new tab</div>';
         }
 
         function openAdminPortal() {
-            window.open('http://localhost:8082/admin-portal', '_blank');
+            const FRONTEND_HOST = window.FRONTEND_HOST || 'localhost';
+            window.open(`http://${FRONTEND_HOST}:8082/admin-portal`, '_blank');
             document.getElementById('navigation-result').innerHTML = 
                 '<div class="success">✅ Opened Admin Portal in new tab</div>';
         }

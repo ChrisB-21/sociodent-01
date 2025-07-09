@@ -1,12 +1,15 @@
 import axios from 'axios';
 
+const VITE_API_HOST = import.meta.env.VITE_API_HOST || 'localhost';
+const API_URL = `http://${VITE_API_HOST}:3000/api`;
+
 // Test CORS headers for Razorpay endpoints
 async function testRazorpayCORS() {
     try {
         console.log('Testing Razorpay CORS headers...\n');
         
         // Test OPTIONS request (preflight)
-        const optionsResponse = await axios.options('http://localhost:3000/api/razorpay/create-order', {
+        const optionsResponse = await axios.options(`${API_URL}/razorpay/create-order`, {
             headers: {
                 'Origin': 'http://localhost:8082',
                 'Access-Control-Request-Method': 'POST',
@@ -21,7 +24,7 @@ async function testRazorpayCORS() {
         console.log('Access-Control-Allow-Credentials:', optionsResponse.headers['access-control-allow-credentials']);
         
         // Test actual POST request
-        const postResponse = await axios.post('http://localhost:3000/api/razorpay/create-order', {
+        const postResponse = await axios.post(`${API_URL}/razorpay/create-order`, {
             amount: 200,
             orderType: 'consultation',
             consultationType: 'virtual'

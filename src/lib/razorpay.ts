@@ -22,7 +22,8 @@ interface RazorpayOptions {
   };
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_HOST = import.meta.env.VITE_API_HOST;
+const API_URL = `https://${API_HOST}/api`;
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
 // Log Razorpay key for debugging
@@ -122,7 +123,7 @@ export const createRazorpayOrder = async (amount: number, orderType = 'consultat
       let errorMessage = 'Failed to create payment order';
       try {
         const errorData = JSON.parse(errorText);
-        errorMessage = errorData.message || errorMessage;
+        errorMessage = errorData.message ?? errorMessage;
       } catch (e) {
         // If response isn't valid JSON, use the original error message
       }
@@ -171,7 +172,7 @@ export const verifyPayment = async (paymentData: {
       let errorMessage = 'Payment verification failed';
       try {
         const errorData = JSON.parse(errorText);
-        errorMessage = errorData.message || errorMessage;
+        errorMessage = errorData.message ?? errorMessage;
       } catch (e) {
         // If response isn't valid JSON, use the original error message
       }
@@ -223,11 +224,8 @@ export const initializeRazorpayPayment = (options: RazorpayOptions): Promise<any
         amount: options.amount,
         currency: options.currency,
         order_id: options.order_id
-      });
-
-      // Create Razorpay instance
+      });      // Create Razorpay instance
       const rzp = new window.Razorpay({
-        key: options.key,
         ...options,
         handler: async function(response: any) {
           try {
@@ -235,14 +233,13 @@ export const initializeRazorpayPayment = (options: RazorpayOptions): Promise<any
               orderId: response.razorpay_order_id,
               paymentId: response.razorpay_payment_id
             });
-            
             // Verify the payment
             const verificationResponse = await verifyPayment({
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             });
-            
+
             if (verificationResponse.success) {
               console.log('Payment verification successful');
               resolve(response);
@@ -264,24 +261,22 @@ export const initializeRazorpayPayment = (options: RazorpayOptions): Promise<any
           animation: true
         },
       });
-      
+
       // Register event listeners
       rzp.on('payment.failed', function(response: any) {
         console.error('Payment failed:', response.error);
         reject(new Error(`Payment failed: ${response.error.description || response.error.reason || 'Unknown error'}`));
       });
-      
       rzp.on('payment.cancel', function() {
         console.log('Payment cancelled by user');
         reject(new Error('Payment was cancelled'));
       });
-      
+
       // Open Razorpay payment form
       console.log('Opening Razorpay payment modal...');
       rzp.open();
     } catch (error) {
       console.error('Error initializing Razorpay payment:', error);
       reject(error);
-    }
-  });
+    }  });
 };

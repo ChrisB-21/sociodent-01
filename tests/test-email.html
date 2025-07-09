@@ -67,6 +67,8 @@
     <div id="result"></div>
 
     <script>
+        const VITE_API_HOST = window.VITE_API_HOST || 'localhost';
+        const API_URL = `http://${VITE_API_HOST}:3000/api/email/send`;
         document.getElementById('emailForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -75,7 +77,7 @@
             resultDiv.className = '';
             
             try {
-                const response = await fetch('http://localhost:3000/api/email/send', {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

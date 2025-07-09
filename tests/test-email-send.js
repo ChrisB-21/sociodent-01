@@ -1,9 +1,12 @@
 // Simple test script to verify email sending functionality
 import fetch from 'node-fetch';
 
+const VITE_API_HOST = import.meta.env.VITE_API_HOST || 'localhost';
+const API_URL = `http://${VITE_API_HOST}:3000/api/email/send`;
+
 async function testSendEmail() {
   try {
-    const response = await fetch('http://localhost:3000/api/email/send', {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

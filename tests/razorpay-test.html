@@ -51,8 +51,8 @@
     <div id="results"></div>
 
     <script>
-        // Configuration
-        const API_URL = 'http://localhost:3000/api';
+        const VITE_API_HOST = window.VITE_API_HOST || 'localhost';
+        const API_URL = `http://${VITE_API_HOST}:3000/api`;
         const RAZORPAY_KEY_ID = 'rzp_live_IdmsDlhHXg0haO';
         
         // DOM elements

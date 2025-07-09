@@ -1,4 +1,3 @@
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -6,15 +5,15 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/socio-smile-market-23/' : '/',
+  base: mode === 'production' ? '/' : '/',
   server: {
     host: "::",
     port: 8081, // Change this to 8081
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: `https://${process.env.VITE_API_HOST ?? 'sociodent-till-whatsapp.onrender.com'}`,
         changeOrigin: true,
-        secure: false
+        secure: true
       }
     }
   },
@@ -28,7 +27,16 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    global: 'globalThis',
+  },
+  optimizeDeps: {
+    exclude: ['twilio']
+  },
   build: {
-    outDir: 'dist'
+    outDir: 'dist',
+    rollupOptions: {
+      external: ['twilio']
+    }
   }
 }));

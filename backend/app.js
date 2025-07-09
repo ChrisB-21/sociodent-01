@@ -4,6 +4,7 @@ import cors from 'cors';
 import razorpayRoutes from './routes/razorpay.js';
 import admin from 'firebase-admin';
 import emailRoutes from './routes/email.js';
+import whatsappRoutes from './routes/whatsapp.js';
 
 const app = express();
 
@@ -52,18 +53,39 @@ try {
 }
 
 // Middleware
-app.use(cors({
-  origin: ['http://localhost:8081', 'http://localhost:8082', 'http://localhost:8083', 'http://localhost:3000', 'https://sociodent-smile-database.web.app', '*'],
+const API_HOST = process.env.API_HOST || 'localhost';
+
+// Allow CORS origins from environment variable or default list
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : [
+      'http://localhost:8081',
+      'http://localhost:8082',
+      'http://localhost:8083',
+      `http://${API_HOST}:3000`,
+      'https://sociodent-smile-database.web.app'
+    ];
+
+app.use(cors(/*{
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'X-Requested-With'],
   credentials: true,
   maxAge: 86400 // 24 hours
-}));
+}*/));
 app.use(express.json());
 
 // Routes
 app.use('/api/razorpay', razorpayRoutes);
 app.use('/api/email', emailRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
 
 // Status endpoint for connectivity checking
 app.get('/api/status', (req, res) => {
@@ -85,4 +107,5 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log('Allowed CORS origins:', allowedOrigins);
 });

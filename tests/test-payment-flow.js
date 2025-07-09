@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+const VITE_API_HOST = import.meta.env.VITE_API_HOST || 'localhost';
+const API_URL = `http://${VITE_API_HOST}:3000/api`;
+
 // End-to-end Razorpay payment test
 async function testFullPaymentFlow() {
     try {
@@ -7,7 +10,7 @@ async function testFullPaymentFlow() {
         
         // Step 1: Create order
         console.log('Step 1: Creating Razorpay order...');
-        const orderResponse = await axios.post('http://localhost:3000/api/razorpay/create-order', {
+        const orderResponse = await axios.post(`${API_URL}/razorpay/create-order`, {
             amount: 200, // ₹2 for virtual consultation
             orderType: 'consultation',
             consultationType: 'virtual'
@@ -40,7 +43,7 @@ async function testFullPaymentFlow() {
         };
         
         try {
-            const verificationResponse = await axios.post('http://localhost:3000/api/razorpay/verify-payment', 
+            const verificationResponse = await axios.post(`${API_URL}/razorpay/verify-payment`, 
                 mockVerificationData, 
                 {
                     headers: {
