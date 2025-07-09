@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
     port: 8081, // Change this to 8081
     proxy: {
       '/api': {
-        target: `https://${process.env.VITE_API_HOST ?? 'sociodent-till-whatsapp.onrender.com'}`,
+        target: `https://${process.env.VITE_API_HOST ?? 'sociodent-01.onrender.com'}`,
         changeOrigin: true,
         secure: true
       }
